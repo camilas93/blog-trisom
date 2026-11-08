@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Académico: Trisomías 21, 18 y 13 - Maternidad y Pediatría</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --accent: #0284c7;
+      --bg-blog: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-blog);
+      color: var(--text-main);
+      line-height: 1.7;
+    }
+
+    /* ENCABEZADO TIPO BLOG ACADÉMICO */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
+
+    header p {
+      font-size: 1.05rem;
+      opacity: 0.95;
+    }
+
+    /* BARRA DE NAVEGACIÓN PRINCIPAL */
+    nav {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      overflow-x: auto;
+      padding: 0 1rem;
+      list-style: none;
+    }
+
+    .nav-container button {
+      background: none;
+      border: none;
+      padding: 1rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .nav-container button:hover, .nav-container button.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background-color: #f1f5f9;
+    }
+
+    /* LAYOUT TIPO BLOG (CONTENIDO + SIDEBAR) */
+    .blog-layout {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .blog-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* SECCIONES Y ARTÍCULOS */
+    .blog-post {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .blog-post.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .post-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .blog-post h2 {
+      color: var(--primary-dark);
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    .blog-post h3 {
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin: 1.5rem 0 0.75rem 0;
+    }
+
+    .blog-post h4 {
+      color: var(--primary);
+      font-size: 1rem;
+      margin: 1rem 0 0.5rem 0;
+    }
+
+    p, ul, ol {
+      margin-bottom: 1rem;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    .dato-curioso {
+      background-color: #eff6ff;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .caso-clinico {
+      background-color: #fefce8;
+      border: 1px solid #fef08a;
+      border-left: 4px solid #eab308;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      border-radius: 8px;
+    }
+
+    /* ESPACIO RESERVADO PARA IMÁGENES DE APOYO EN GRIS */
+    .image-placeholder {
+      background-color: #e2e8f0;
+      border: 2px dashed #94a3b8;
+      border-radius: 8px;
+      padding: 1.75rem 1rem;
+      text-align: center;
+      color: #334155;
+      margin: 1.5rem 0;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .image-placeholder span {
+      display: block;
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 0.3rem;
+      font-weight: normal;
+    }
+
+    /* SIDEBAR LATERAL ACADÉMICO */
+    aside {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-widget {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .sidebar-widget h3 {
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 0.4rem;
+    }
+
+    .sidebar-widget ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar-widget li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-widget button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .sidebar-widget button:hover {
+      text-decoration: underline;
+    }
+
+    /* TÉRMINOS CON VENTANA FLOTANTE (MODAL) */
+    .term {
+      color: var(--primary-dark);
+      text-decoration: underline dotted;
+      cursor: pointer;
+      font-weight: 600;
+      background-color: rgba(15, 118, 110, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .term:hover {
+      background-color: rgba(15, 118, 110, 0.2);
+    }
+
+    /* MODAL FLOTANTE */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(3px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 450px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .close-modal {
+      background: #f1f5f9;
+      border: none;
+      font-size: 1.2rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* TABLAS CLÍNICAS */
+    .table-container {
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8fafc;
+      color: var(--primary-dark);
+    }
+
+    /* QUIZ INTERACTIVO */
+    .quiz-option {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .quiz-option:hover {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .feedback {
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.correct { background: #dcfce7; color: #15803d; display: block; }
+    .feedback.incorrect { background: #ffe4e6; color: #b91c1c; display: block; }
+
+    /* FOLLETO TRÍPTICO IMPRIMIBLE */
+    .brochure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .brochure-panel {
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      padding: 1rem;
+      background: #fafafa;
+    }
+
+    .btn-print {
+      background: var(--accent);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .btn-print:hover { background: #0369a1; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #post-folleto, #post-folleto * { visibility: visible; }
+      #post-folleto { position: absolute; left: 0; top: 0; width: 100%; }
+      .btn-print { display: none; }
+      .brochure-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 0.5rem; }
+      .brochure-panel { font-size: 10px; padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO TIPO BLOG -->
+  <header>
+    <h1>Blog Académico: Maternidad y Pediatría</h1>
+    <p>Técnico en Auxiliar de Enfermería • Exposición de Malformaciones Congénitas Genéticas</p>
+  </header>
+
+  <!-- NAVEGACIÓN ENTRE SECCIONES -->
+  <nav>
+    <ul class="nav-container">
+      <li><button class="nav-btn active" onclick="switchPost('post-1')">1. Introducción Genética</button></li>
+      <li><button class="nav-btn" onclick="switchPost('post-2')">2. Trisomía 21 (Down)</button></li>
+      <li><button class="nav-btn" onclick="switchPost('post-3')">3. Trisomía 18 (Edwards)</button></li>
+      <li><button class="nav-btn" onclick="switchPost('post-4')">4. Trisomía 13 (Patau)</button></li>
+      <li><button class="nav-btn" onclick="switchPost('post-5')">5. Quiz de Evaluación</button></li>
+      <li><button class="nav-btn" onclick="switchPost('post-folleto')">📄 Folleto Imprimible</button></li>
+    </ul>
+  </nav>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="blog-layout">
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+
+      <!-- ARTÍCULO 1: INTRODUCCIÓN Y GENÉTICA -->
+      <article id="post-1" class="blog-post active">
+        <div class="post-meta">
+          <span>📌 Módulo Introductorio</span>
+          <span>⏱️ Exposición Base</span>
+        </div>
+        <h2>Introducción a las Malformaciones Congénitas y Genética Basal</h2>
+        
+        <p>Para empezar a hablar sobre las malformaciones congénitas genéticas, puntualmente trisomías 21, 18 y 13, debemos abordar primero el tema de la reproducción y multiplicación de cromosomas que dan origen a un ser humano.</p>
+
+        <p>Tenemos que, todos los seres humanos tenemos <strong>46 cromosomas (23 pares)</strong>, mitad de la madre, mitad del padre.</p>
+
+        <p>Para empaquetar la mitad de los cromosomas en un espermatozoide o en un óvulo, en realidad se empieza con una sola célula que tiene 46 cromosomas; digamos que estamos haciendo un óvulo para la madre, solo voy a mostrar un par de cromosomas, pero recuerden que los 23 pares hacen esto.</p>
+
+        <p>Por tanto, se inicia el proceso de <span class="term" onclick="showModal('Meiosis', 'Proceso de división celular especializado por el cual se generan las células sexuales (gametos: óvulos y espermatozoides), reduciendo la carga genética a la mitad (23 cromosomas).')">meiosis</span>, por el que se generan las células sexuales, y los cromosomas se replican; así pues, ahora tienen la forma de una <strong>'X'</strong> y, aunque hay dos copias de ADN, todavía decimos que se trata de un cromosoma, ya que ambos están enganchados en el medio por una estructura llamada <span class="term" onclick="showModal('Centrómero', 'Región estrecha y central del cromosoma que une a las dos cromátidas hermanas durante la división celular.')">centrómero</span>.</p>
+
+<div style="text-align: center; margin: 1.5rem 0;">
+  <img src="cromo.png" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <span style="display: block; font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Figura 1: Estructura del cromosoma en forma de 'X'</span>
+</div>
+        <p>La célula se divide en dos y los cromosomas emparejados se separan, por lo que cada una estas células tiene ahora 23 cromosomas.</p>
+
+        <p>Las dos copias del cromosoma se separan y las células se dividen de nuevo, lo que significa que ahora tenemos cuatro células, cada una de ellas todavía con 23 cromosomas.</p>
+
+        <p>Ahora están listas para emparejarse con un espermatozoide del padre, que también tiene 23 cromosomas, lo que hace un total de 46 cromosomas, y nueve meses después tenemos un bebé.</p>
+
+     <div style="text-align: center; margin: 1.5rem 0;">
+  <img src="COPIAS.jpg" alt="Diagrama de formación de Espermatozoides Normales" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <span style="display: block; font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Esquema de meiosis normal donde resultan 4 gametos haploides con 23 cromosomas cada uno</span>
+</div>
+
+        <p>Uno de estos pares, el de los cromosomas sexuales, determina el sexo del individuo y se representa en el cariotipo en la última posición. Las 22 parejas de cromosomas restantes se conocen como <strong>cromosomas autosómicos</strong> y en el cariotipo se colocan en orden decreciente de tamaño.</p>
+
+        <h3>¿Qué son las Trisomías?</h3>
+        <p>Es una alteración genética (<span class="term" onclick="showModal('Aneuploidía', 'Presencia de un número anómalo de cromosomas en una célula, ya sea por falta o por exceso (en este caso, 47 cromosomas en lugar de 46).')">Aneuploidía</span>) donde existe un cromosoma extra en un par determinado, dando un total de <strong>47 cromosomas</strong>.</p>
+
+        <p><strong>Mecanismo Principal:</strong> El mecanismo por el cual se produce ese cromosoma extra es por la <span class="term" onclick="showModal('No Disyunción Meiótica', 'Fallo en la separación correcta de los cromosomas durante la formación del óvulo o del espermatozoide, originando gametos con cromosomas de más o de menos.')">No disyunción meiótica</span>, que es el fallo en la separación de los cromosomas durante la formación del óvulo o espermatozoide. Representa más del <strong>90% a 95% de los casos</strong>.</p>
+
+     
+        <h3>Tipos de Trisomía</h3>
+        <p>Hay 3 tipos de trisomía:</p>
+        <p>La <strong>Trisomía Libre</strong> que se representa en esta imagen:</p>
+        
+        <div style="text-align: center; margin: 1.5rem 0;">
+          <img src="crom.png" alt="Tipos de Trisomía y No Disyunción" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <span style="display: block; font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Esquema de no disyunción en Meiosis I y Meiosis II</span>
+        </div>
+
+        <p>Como vemos en la gráfica, la no disyunción u error de división puede ocurrir en dos momentos diferentes: en el primer o en el segundo nivel.</p>
+        
+        <p><strong>Si el fallo ocurre en el primer nivel (Meiosis I):</strong> La célula madre no divide bien sus parejas de cromosomas. Normalmente irían 23 estructuras a cada lado, pero al ocurrir el error, una célula se roba el par completo en forma de "X" y la otra célula se queda completamente vacía o en ceros. Al pasar al segundo nivel, esa célula con exceso se divide y rompe las "X", dejando óvulos o espermatozoides con dos palitos. Cuando llega el gameto de la pareja a completar la carga, se genera una sobrecarga por la presencia de ese tercer cromosoma.</p>
+        
+        <p><strong>Si la falla ocurre en el segundo nivel (Meiosis II):</strong> Las dos células del primer nivel se forman de manera correcta (con 23 estructuras cada una). Pero al momento de pasar al segundo nivel y dividirse, los palitos no se separan del centrómero de forma equitativa. En lugar de ir un palito a cada célula individual, los dos palitos pasan juntos a una sola célula, dejando a su vecina vacía. Al llegar la fecundación, se repite la falla de sobrecarga y terminamos viendo 3 cromosomas en el bebé.</p>
+        
+        <p><strong>El segundo y tercer tipo de trisomía son Translocación y en Mosaico:</strong></p>
+        
+        <p><strong>En la translocación</strong> ocurre un accidente micro estructural. Una parte muy pequeña del cromosoma se parte y, al flotar por la célula, se pega físicamente a otro cromosoma de otro tipo (por ejemplo, el 21 pegado al 14). Cuando se junta el óvulo y el espermatozoide y hacemos el conteo en su par correspondiente, vemos solo 2 palitos sueltos. Sin embargo, si miramos el cromosoma del otro tipo, veremos que tiene un "bulto" pegado y es más largo de lo normal. Ese bulto es el material extra. De ahí en adelante, el cuerpo va a leer la información tres veces porque el material genético del cromosoma extra está presente, solo que está camuflado en otra parte del manual.</p>
+        
+        <p><strong>En el mosaico</strong>, el proceso de copia y división empieza 100% bien. Se realiza la fecundación y la primera célula del bebé se conforma de manera perfecta con sus dos segmentos normales. El problema ocurre un poco después, durante el crecimiento del embrión. En alguna de esas réplicas celulares se genera un error y el cuerpo produce una célula hija con 3 segmentos o palitos y la otra con uno solo. La célula que se queda con uno solo muere, pero la que tiene 3 sobrevive y se sigue multiplicando. Al final, el bebé nace con un "mosaico" celular: un grupo de células normales y otro grupo con la trisomía.</p>
+
+        <p>Para detectar esa carga de más, se realiza una evaluación de esa estructura genética llamada <span class="term" onclick="showModal('Cariotipo', 'Representación gráfica u fotográfica del mapa cromosómico completo de un individuo ordenado por pares y tamaño.')">Cariotipo</span>, el cual permite examinar el mapa cromosómico completo para identificar la presencia de los tres cromosomas en el par 21, 18 o 13.</p>
+
+        <h3>Patrones de Cariotipo Normal</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+  
+  <!-- IMAGEN 1 -->
+  <div style="text-align: center; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+    <img src="cario.png" alt="Descripción 1" style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <span style="display: block; font-size: 0.85rem; color: #475569; margin-top: 0.5rem; font-weight: 500;">CARIOTIPO ILUSTRACIÓN</span>
+  </div>
+
+  <!-- IMAGEN 2 -->
+  <div style="text-align: center; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+    <img src="cariom.png" alt="Descripción 2" style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <span style="display: block; font-size: 0.85rem; color: #475569; margin-top: 0.5rem; font-weight: 500;">CARIOTIPO REAL MASCULINO</span>
+  </div>
+
+  <!-- IMAGEN 3 -->
+  <div style="text-align: center; background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+    <img src="cariof.png" alt="Descripción 3" style="max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <span style="display: block; font-size: 0.85rem; color: #475569; margin-top: 0.5rem; font-weight: 500;">CARIOTIPO REAL FEMENINO</span>
+  </div>
+
+</div>
+      </article>
+
+      <!-- ARTÍCULO 2: TRISOMÍA 21 -->
+      <article id="post-2" class="blog-post">
+        <div class="post-meta">
+          <span>📌 Módulo 2</span>
+          <span>🧬 Cromosoma 21</span>
+        </div>
+        <h2>Trisomía 21 - Síndrome de Down</h2>
+
+      <div style="text-align: center; margin: 1.5rem 0;">
+  <img src="down.png" alt="Down Syndrome Trisomy 21" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <span style="display: block; font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">Esquema genético de la copia extra en el par 21</span>
+</div>
+        <p>Es una afección genética asociada a una copia parcial o completa del cromosoma 21. Una persona con síndrome de Down pasa de tener 46 cromosomas a 47, con una copia extra puntualmente en el cromosoma 21.</p>
+
+        <div class="dato-curioso">
+          <strong>💡 Dato adicional:</strong> El síndrome de Down debe su nombre al médico británico John Langdon Down, quien describió por primera vez esta afección como "mongolismo", porque los rasgos físicos de estos individuos eran similares a los de las personas de la raza mongola de Blumenbach. Dado que el nombre era inexacto y peyorativo, en la década de los setenta se cambió por el de síndrome de Down.
+        </div>
+
+        <p>Recuerdan que hablaba inicialmente de la No Disyunción… bueno, para este caso del cromosoma 21, se ve así en la muestra del cariotipo (repaso nuevamente de la no disyunción, las divisiones tienen que ser equitativas):</p>
+
+     <!-- IMAGEN 8 -->
+<div style="text-align: center; margin: 2rem 0; background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+  <img src="21.png" alt="Esquema de no disyunción meiótica" style="width: 100%; max-width: 800px; height: auto; border-radius: 6px;">
+  <span style="display: block; font-size: 0.95rem; color: #334155; margin-top: 0.75rem; font-weight: 600;">Esquema de no disyunción meiótica resultando en Trisomía 21</span>
+</div>
+
+<!-- IMAGEN 9 -->
+<div style="text-align: center; margin: 2rem 0; background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+  <img src="211.png" alt="Esquema de fertilización con gameto anómalo" style="width: 100%; max-width: 800px; height: auto; border-radius: 6px;">
+  <span style="display: block; font-size: 0.95rem; color: #334155; margin-top: 0.75rem; font-weight: 600;">Esquema de fertilización con gameto anómalo produciendo 3 cromosomas 21</span>
+</div>
+
+<!-- IMAGEN 10 -->
+<div style="text-align: center; margin: 2rem 0; background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+  <img src="downreal.png" alt="Cariotipo de Síndrome de Down" style="width: 100%; max-width: 800px; height: auto; border-radius: 6px;">
+  <span style="display: block; font-size: 0.95rem; color: #334155; margin-top: 0.75rem; font-weight: 600;">Muestra de cariotipo real mostrando el triplete en el par 21</span>
+</div>
+
+        <h3>Factores de Riesgo y Epidemiología</h3>
+        <p>Un factor de riesgo importante para el síndrome de Down es la <strong>edad materna</strong>. Esta afección se produce aproximadamente una vez de cada 1.500 nacimientos en los que la madre es menor de 20 años, frente a una de cada 25 en los que la madre es mayor de 45 años.</p>
+
+        <h3>Afectaciones Asociadas</h3>
+        <ul>
+          <li><strong>Cardíacas:</strong> Defectos cardíacos congénitos, así como defectos del tabique ventricular y auriculoventricular (DSAV / CIV).</li>
+          <li><strong>Hematológicas:</strong> Pueden desarrollar afecciones sanguíneas, sobre todo leucemias.</li>
+          <li><strong>Gastrointestinales:</strong> Atresia duodenal y enfermedad de Hirschsprung (afección caracterizada por la ausencia de células nerviosas específicas de los intestinos).</li>
+          <li><strong>Neurológicas y Cognitivas:</strong> Discapacidad intelectual y mayor riesgo de enfermedad de Alzheimer.</li>
+          <li><strong>Reproductivas:</strong> Problemas reproductivos como infertilidad.</li>
+        </ul>
+
+        <h3>Características Físicas Predominantes</h3>
+        <p>En las características físicas predominan: un único pliegue palmar transversal en las manos, un hueco entre los dos primeros dedos de los pies, un perfil facial plano, cara redonda, mentón, boca y orejas pequeñas, cuello corto.</p>
+
+      <!-- IMAGEN 11 -->
+<div style="text-align: center; margin: 2rem 0; background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+  <img src="DOWN 1.jpg" alt="Comparación de Pliegue Palmar Único vs Pliegue Palmar Múltiple" style="width: 100%; max-width: 800px; height: auto; border-radius: 6px;">
+  <span style="display: block; font-size: 0.95rem; color: #334155; margin-top: 0.75rem; font-weight: 600;">Fotografía y esquema de la línea palmar simiana</span>
+</div>
+
+<!-- IMAGEN 12 -->
+<div style="text-align: center; margin: 2rem 0; background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+  <img src="DOWN.jpg" alt="Infografía Síntomas y Signos de Síndrome de Down" style="width: 100%; max-width: 800px; height: auto; border-radius: 6px;">
+  <span style="display: block; font-size: 0.95rem; color: #334155; margin-top: 0.75rem; font-weight: 600;">Infografía detallada con ojos almendrados, puente nasal plano, macroglosia, hipotonía y orejas pequeñas</span>
+</div>
+        <h3>Pruebas de Detección Prenatal</h3>
+        <p>Durante el embarazo se pueden realizar algunas pruebas de detección, y ciertos marcadores sugieren un mayor riesgo de que el bebé pueda tener síndrome de Down.</p>
+
+        <h4>1. Análisis de sangre (Segundo Trimestre - Perfil Bioquímico):</h4>
+       <img src="bioq.png" alt="Tabla de Marcadores Bioquímicos" style="max-width: 100%; height: auto;">
+<span>Tabla con niveles típicos: AFP baja, uE3 bajo, hCG alta e Inhibina A alta en Down</span>
+
+        <h4>2. Ecografía (Translucencia Nucal):</h4>
+        <p>Prueba de imagen entre las semanas 11 y 14 de embarazo donde los médicos buscan la translucencia nucal.</p>
+   <img src="nucal.png" alt="Cuadro explicativo de Translucencia Nucal" style="max-width: 100%; height: auto;">
+<span>Explicación de medición: < 3mm normal / ≥ 3mm aumentada por acumulación de líquido</span>
+        <p><em>*Hay que tener en cuenta que esto NO es un diagnóstico definitivo para confirmar el síndrome de Down, sino una alerta que eleva la probabilidad de un defecto congénito.</em></p>
+
+        <h3>Cuidados de Enfermería en Síndrome de Down</h3>
+        <ul>
+          <li><strong>Control prenatal y monitorización obstétrica:</strong> Seguimiento ecográfico riguroso, preparación para pruebas diagnósticas y evaluación de riesgos maternos.</li>
+          <li><strong>Soporte emocional y comunicación a los padres:</strong> Comunicación empática de la noticia, reducción de la ansiedad y el duelo, y conexión con redes de apoyo.</li>
+          <li><strong>Planificación del nacimiento (Parto de alto riesgo):</strong> Coordinación interdisciplinaria, preparación de la sala de partos y manejo del primer contacto (apego precoz).</li>
+        </ul>
+      </article>
+
+      <!-- ARTÍCULO 3: TRISOMÍA 18 -->
+      <article id="post-3" class="blog-post">
+        <div class="post-meta">
+          <span>📌 Módulo 3</span>
+          <span>🧬 Cromosoma 18</span>
+        </div>
+        <h2>Trisomía 18 - Síndrome de Edwards</h2>
+
+        <p>Aquí la copia adicional extra se encuentra en el <strong>cromosoma 18</strong>.</p>
+
+     <img src="edw.png" alt="Cariotipo del Síndrome de Edwards con el trío en el cromosoma 18" style="max-width: 100%; height: auto;">
+<span></span>
+
+        <p>Esta afección es la segunda trisomía autosómica más común después de la trisomía 21 y se asocia con un amplio espectro de anomalías congénitas, incluyendo defectos cardíacos, anomalías craneofaciales, restricción del crecimiento y un deterioro significativo del neurodesarrollo.</p>
+
+        <p>Al igual que en la anterior trisomía, un factor de riesgo es la edad avanzada de la madre. En este caso se tiene un riesgo de recurrencia entre el <strong>0,5% hasta el 20%</strong> en embarazos posteriores.</p> 
+
+        <div class="dato-curioso">
+          <strong>💡 Dato curioso:</strong> Descrito por primera vez en 1960, en donde se describió a un recién nacido con múltiples malformaciones congénitas y déficits cognitivos. <em>La trisomía 18 tiene un alto riesgo de pérdida fetal y muerte fetal.</em>
+        </div>
+
+        <h3>Afectaciones Asociadas</h3>
+        <p><strong>Prenatalmente:</strong> Restricción del crecimiento intrauterino (RCIU), polihidramnios, agenesia del cuerpo calloso, quistes del plexo coroideo, engrosamiento nucal, braquicefalia, manos cerradas con dedos índices superpuestos, defectos cardíacos, onfalocele y arteria umbilical única.</p>
+
+        <p><strong>Después del Nacimiento:</strong></p>
+        <ul>
+          <li><strong>Cardiovascular (90% de los pacientes):</strong> Comunicación interventricular o auricular, conducto arterioso persistente, tetralogía de Fallot, aorta cabalgante, coartación de la aorta, síndrome de hipoplasia del ventrículo izquierdo y enfermedad cardíaca polivalvular (que afecta a dos o más válvulas, generalmente aórtica y pulmonar).</li>
+          <li><strong>Pulmonar:</strong> Hipoplasia pulmonar, traqueobroncomalacia, laringomalacia, apnea obstructiva y central, e hipertensión pulmonar de inicio temprano.</li>
+          <li><strong>Gastrointestinal:</strong> Hernia umbilical, atresia esofágica con fístula traqueoesofágica, estenosis pilórica, atresia ileal, malrotación, divertículo de Meckel y diástasis de rectos abdominales.</li>
+          <li><strong>Genitourinario:</strong> Criptorquidia, hipospadias, micropene, hipertrofia del clítoris, hipoplasia de labios mayores, disgenesia ovárica, útero bífido, riñón en herradura, agenesia renal e hidronefrosis.</li>
+          <li><strong>Sistema Nervioso Central (30% de pacientes):</strong> Hipoplasia cerebelosa, meningoencefalocele, anencefalia, hidrocefalia, holoprosencefalia, malformación de Arnold-Chiari e hipoplasia del cuerpo calloso.</li>
+        </ul>
+
+        <h3>Características Físicas Detalladas</h3>
+        <ul>
+          <li><strong>Cráneo:</strong> Microcefalia, estrechamiento bitemporal y occipucio prominente.</li>
+          <li><strong>Rostro:</strong> Rostro triangular y asimétrico con parálisis facial.</li>
+          <li><strong>Ojos:</strong> Microftalmia, hipertelorismo, epicanto, fisuras palpebrales cortas, coloboma del iris, catarata, opacidad corneal, cresta supraorbitaria hipoplásica y pigmentación retiniana anormal.</li>
+          <li><strong>Nariz y Boca:</strong> Puente nasal prominente, atresia de coanas, microretrognatia, microstomía, paladar ojival estrecho, labio hendido y paladar hendido.</li>
+          <li><strong>Orejas:</strong> Microtia, apéndices preauriculares, orejas de implantación baja o retrovertidas y displásicas.</li>
+          <li><strong>Esquelético:</strong> Cuello corto, esternón corto, pecho ancho con pezones separados, osificación incompleta de clavícula, escoliosis, tórax en embudo, pelvis estrecha, dislocación de cadera, manos cerradas con dedos superpuestos (índice sobre medio, meñique sobre anular) y pies en mecedora con calcáneos prominentes.</li>
+        </ul>
+
+        <h3>Pruebas de Detección</h3>
+        <p>Cribado sérico materno (niveles bajos de AFP, hCG y estriol no conjugado) combinado con ecografía de translucencia nucal. Las pruebas prenatales no invasivas de ADN fetal libre combinadas con ecografía alcanzan un valor predictivo positivo del 100% en el segundo trimestre. </p>
+<p> Se recomienda la <strong>biopsia de vellosidades coriónicas</strong> (procedimiento médico prenatal que consiste en extraer una pequeña muestra de tejido de la placenta para analizar el material genético del bebé) si el cribado prenatal sugiere un alto riesgo de <strong>aneuploidía fetal</strong> (número incorrecto de cromosomas).</p>
+
+        <h3>Cuidados de Enfermería Específicos</h3>
+        <ul>
+          <li>Se repiten los cuidados del módulo anterior, adicionando seguimiento interdisciplinar del crecimiento, desarrollo físico, motor y cognitivo.</li>
+          <li>Examen neurológico regular.</li>
+          <li>Remisión al nacer a oftalmología, ecocardiograma neonatal y ecografía abdominal cada 6 meses hasta la adolescencia para vigilar apariciones neoplásicas.</li>
+          <li>Evaluación ortopédica continua por contracturas o escoliosis.</li>
+          <li>Consulta con neumología y estudio del sueño ante apneas.</li>
+          <li>Derivación a gastroenterología y nutrición para soporte enteral o manejo del reflujo gastroesofágico.</li>
+        </ul>
+
+        <div class="caso-clinico">
+          <h4>🏥 Caso Clínico Real:</h4>
+          <p>  <img src="caso1.png" alt="Fotografía clínica de recién nacido con Trisomía 18" style="max-width: 100%; height: auto;"></p>
+         </div>
+      </article>
+
+      <!-- ARTÍCULO 4: TRISOMÍA 13 -->
+      <article id="post-4" class="blog-post">
+        <div class="post-meta">
+          <span>📌 Módulo 4</span>
+          <span>🧬 Cromosoma 13</span>
+        </div>
+        <h2>Trisomía 13 - Síndrome de Patau</h2>
+
+        <p>Aquí la copia adicional extra se encuentra en el <strong>cromosoma 13</strong>.</p>
+
+       <img src="patau.png" alt="Cariotipo del Síndrome de Patau con la trisomía en el par 13" style="max-width: 100%; height: auto;">
+
+        <p>Se produce en aproximadamente <strong>1,7 por cada 10.000 embarazos</strong>. Se caracteriza por discapacidad intelectual grave, múltiples anomalías congénitas, defectos cardíacos congénitos y anomalías urogenitales. Está asociado con una alta mortalidad neonatal; la mayoría de los lactantes afectados muere dentro de las primeras semanas de vida.</p>
+
+        <h3>Afectaciones Asociadas y Sobrevida</h3>
+        <ul>
+          <li>Las crisis de apnea en la primera infancia son frecuentes.</li>
+          <li>La discapacidad intelectual es extremadamente grave.</li>
+          <li>Del 57% al 80% de los lactantes sufren anomalías cardiovasculares congénitas graves.</li>
+        </ul>
+
+        <h3>Características Físicas Clínicas</h3>
+     <div style="text-align: center;">
+    <img src="patau1.png" alt="Cuadro con fotografías clínicas de recién nacidos con Síndrome de Patau" style="max-width: 100%; height: auto;">
+
+<p><span>Muestra holoprosencefalia severa, labio leporino bilateral, ciclopia y anomalías severas de línea media</span></p> </div>
+
+        <h3>Pruebas de Detección</h3>
+        <p>Se realiza cribado prenatal no invasivo mediante ADN libre y confirmación por biopsia de vellosidades coriónicas o amniocentesis.</p>
+
+        <h3>Cuidados de Enfermería y Pronóstico</h3>
+        <ul>
+          <li>Apoyo emocional y acompañamiento intensivo al grupo familiar.</li>
+          <li>Controles y manejo paliativo especializado según la evolución del lactante.</li>
+        </ul>
+
+        <div class="image-placeholder">
+         <img src="cuidados.png" alt="Cuadro estadístico de supervivencia en Trisomía 13" class="center" style="max-width: 100%; height: auto;">
+          <span>Datos de sobrevida:
+          • Primeras semanas: ~50% no sobrevive más allá de la primera semana o 10 días.
+          • Primer año: ~90% a 95% fallece antes del año.
+          • Casos excepcionales: Menos del 5% al 10% supera el año (casos de mosaicismo o trisomía parcial).</span>
+        </div>
+      </article>
+
+      <!-- ARTÍCULO 5: QUIZ -->
+      <article id="post-5" class="blog-post">
+        <div class="post-meta">
+          <span>📌 Evaluación</span>
+          <span>📝 Interactivo</span>
+        </div>
+        <h2>Quiz de Repaso Académico</h2>
+        <p>Utiliza estas preguntas para evaluar la retención del tema con tus compañeros al finalizar la presentación oral:</p>
+
+        <div style="margin-top: 1.5rem;">
+          <p><strong>1. ¿Cuál es el estudio citogenético definitivo para examinar el mapa cromosómico completo e identificar las trisomías?</strong></p>
+          <button class="quiz-option" onclick="checkQuiz(this, false, 'q1')">A) Ecografía pélvica de rutina</button>
+          <button class="quiz-option" onclick="checkQuiz(this, true, 'q1')">B) Cariotipo</button>
+          <button class="quiz-option" onclick="checkQuiz(this, false, 'q1')">C) Prueba de Apgar neonatal</button>
+          <div id="q1-feedback" class="feedback"></div>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <p><strong>2. El mecanismo genético responsable de más del 90% a 95% de las trisomías es:</strong></p>
+          <button class="quiz-option" onclick="checkQuiz(this, true, 'q2')">A) No disyunción meiótica</button>
+          <button class="quiz-option" onclick="checkQuiz(this, false, 'q2')">B) Translocación robertsoniana simple</button>
+          <button class="quiz-option" onclick="checkQuiz(this, false, 'q2')">C) Infección bacteriana gestacional</button>
+          <div id="q2-feedback" class="feedback"></div>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <p><strong>3. ¿Qué trisomía presenta característicamente la postura de puños cerrados con dedos índices superpuestos sobre el medio y meñique sobre el anular?</strong></p>
+          <button class="quiz-option" onclick="checkQuiz(this, false, 'q3')">A) Trisomía 21 (Síndrome de Down)</button>
+          <button class="quiz-option" onclick="checkQuiz(this, true, 'q3')">B) Trisomía 18 (Síndrome de Edwards)</button>
+          <button class="quiz-option" onclick="checkQuiz(this, false, 'q3')">C) Trisomía 13 (Síndrome de Patau)</button>
+          <div id="q3-feedback" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- ARTÍCULO FOLLETO -->
+      <article id="post-folleto" class="blog-post">
+        <div class="post-meta">
+          <span>📌 Entregable</span>
+          <span>📄 Impresión Plegable</span>
+        </div>
+        <h2>Cartilla de Repaso / Folleto Tríptico</h2>
+        <p>Haz clic en el siguiente botón para imprimir o guardar en PDF esta cartilla plegable de 3 cuerpos diseñada exactamente para tus compañeros de clase:</p>
+
+        <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar Folleto PDF</button>
+
+        <div class="brochure-grid">
+          <div class="brochure-panel">
+            <h3>PANEL 1: Genética y T21</h3>
+            <p><strong>Bases:</strong> 46 cromosomas (23 pares). Gametos por meiosis (23).</p>
+            <p><strong>No Disyunción:</strong> Error meiótic >90-95% → 47 cromosomas.</p>
+            <hr style="margin: 0.4rem 0;">
+            <p><strong>T21 (Down):</strong> Copia extra en #21.</p>
+            <ul>
+              <li>Hipotonía, perfil plano, pliegue simiano.</li>
+              <li>Defectos septales cardíacos (DSAV/CIV).</li>
+              <li>Detección: TN ≥ 3mm, cariotipo.</li>
+            </ul>
+          </div>
+
+          <div class="brochure-panel">
+            <h3>PANEL 2: T18 y T13</h3>
+            <p><strong>T18 (Edwards):</strong> Copia extra en #18.</p>
+            <ul>
+              <li>RCIU, microcefalia, occipucio prominente.</li>
+              <li>Puños cerrados con dedos superpuestos.</li>
+              <li>Pies en mecedora, alta mortalidad.</li>
+            </ul>
+            <hr style="margin: 0.4rem 0;">
+            <p><strong>T13 (Patau):</strong> Copia extra en #13.</p>
+            <ul>
+              <li>Holoprosencefalia, labio leporino.</li>
+              <li>Polidactilia, 90-95% fallece al año.</li>
+            </ul>
+          </div>
+
+          <div class="brochure-panel">
+            <h3>PANEL 3: Rol Enfermería</h3>
+            <p><strong>Cuidados Técnicos:</strong></p>
+            <ul>
+              <li>Monitorización vital y vía aérea.</li>
+              <li>Alimentación asistida (pos. semi-sentada).</li>
+              <li>Seguimiento multidisciplinar (cardio/neuro).</li>
+              <li>Comunicación empática y soporte paliativo familiar.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+    </main>
+
+    <!-- SIDEBAR LATERAL -->
+    <aside>
+      <div class="sidebar-widget">
+        <h3>Navegación del Blog</h3>
+        <ul>
+          <li><button onclick="switchPost('post-1')">1. Introducción Genética</button></li>
+          <li><button onclick="switchPost('post-2')">2. Trisomía 21 (Down)</button></li>
+          <li><button onclick="switchPost('post-3')">3. Trisomía 18 (Edwards)</button></li>
+          <li><button onclick="switchPost('post-4')">4. Trisomía 13 (Patau)</button></li>
+          <li><button onclick="switchPost('post-5')">5. Quiz de Evaluación</button></li>
+          <li><button onclick="switchPost('post-folleto')">📄 Folleto Imprimible</button></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-widget">
+        <h3>Glosario de Términos</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Toca cualquier palabra subrayada en el texto para ver su ventana flotante:</p>
+        <ul style="font-size: 0.85rem;">
+          <li><span class="term" onclick="showModal('Meiosis', 'División celular de células sexuales.')">Meiosis</span></li>
+          <li><span class="term" onclick="showModal('Centrómero', 'Punto de unión de las cromátidas hermanas.')">Centrómero</span></li>
+          <li><span class="term" onclick="showModal('Aneuploidía', 'Número alterado de cromosomas (47).')">Aneuploidía</span></li>
+          <li><span class="term" onclick="showModal('No Disyunción Meiótica', 'Fallo en la separación cromosómica.')">No Disyunción</span></li>
+          <li><span class="term" onclick="showModal('Cariotipo', 'Mapa cromosómico completo ordenado.')">Cariotipo</span></li>
+          <li><span class="term" onclick="showModal('Hipotonía', 'Tono muscular bajo en el neonato.')">Hipotonía</span></li>
+          <li><span class="term" onclick="showModal('Macroglosia', 'Lengua de tamaño aumentado.')">Macroglosia</span></li>
+          <li><span class="term" onclick="showModal('Micrognatia', 'Mandíbula inferior muy pequeña.')">Micrognatia</span></li>
+          <li><span class="term" onclick="showModal('Holoprosencefalia', 'Falta de división del cerebro anterior.')">Holoprosencefalia</span></li>
+          <li><span class="term" onclick="showModal('Polidactilia', 'Dedos adicionales en manos o pies.')">Polidactilia</span></li>
+        </ul>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- MODAL VENTANA FLOTANTE DEFINICIONES -->
+  <div class="modal-overlay" id="termModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTermTitle">Término Médico</h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <p id="modalTermDesc">Definición...</p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT DE INTERACTIVIDAD -->
+  <script>
+    function switchPost(postId) {
+      const posts = document.querySelectorAll('.blog-post');
+      posts.forEach(p => p.classList.remove('active'));
+
+      const target = document.getElementById(postId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      const buttons = document.querySelectorAll('.nav-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      buttons.forEach(btn => {
+        if(btn.getAttribute('onclick').includes(postId)) {
+          btn.classList.add('active');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const modal = document.getElementById('termModal');
+    const modalTitle = document.getElementById('modalTermTitle');
+    const modalDesc = document.getElementById('modalTermDesc');
+
+    function showModal(term, definition) {
+      modalTitle.innerText = term;
+      modalDesc.innerText = definition;
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    function checkQuiz(button, isCorrect, qId) {
+      const feedback = document.getElementById(qId + '-feedback');
+      const options = button.parentElement.querySelectorAll('.quiz-option');
+
+      options.forEach(opt => opt.style.pointerEvents = 'none');
+
+      if (isCorrect) {
+        button.style.backgroundColor = '#dcfce7';
+        button.style.borderColor = '#22c55e';
+        feedback.innerText = "¡Correcto! Respuesta acertada.";
+        feedback.className = "feedback correct";
+      } else {
+        button.style.backgroundColor = '#ffe4e6';
+        button.style.borderColor = '#ef4444';
+        feedback.innerText = "Incorrecto. Revisa la información del artículo.";
+        feedback.className = "feedback incorrect";
+      }
+    }
+  </script>
+</body>
+</html>
